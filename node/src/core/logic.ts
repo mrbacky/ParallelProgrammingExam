@@ -1,13 +1,24 @@
 export function getPrimesSequential(first: number, last: number) {
-  const howLong = timer();
+  const t = timer();
   const primes: number[] = [];
   for (let i = first; i < last; i++) {
     if (isPrime(i)) {
       primes.push(i);
     }
   }
-  console.log('time: ', howLong.ms);
+  console.log(`time: ${t} first: ${first}, last: ${last}`);
+  return primes;
+}
 
+export async function getPrimesSequentialAsync(first: number, last: number) {
+  const t = timer();
+  const primes: number[] = [];
+  for (let i = first; i < last; i++) {
+    if (isPrime(i)) {
+      primes.push(i);
+    }
+  }
+  console.log(`time: ${t} first: ${first}, last: ${last}`);
   return primes;
 }
 
@@ -27,19 +38,8 @@ function isPrime(num: number): boolean {
  */
 export function timer() {
   let timeStart = new Date().getTime();
-  return {
-    /** <integer>s e.g 2s etc. */
-    get seconds() {
-      const seconds =
-        Math.ceil((new Date().getTime() - timeStart) / 1000) + 's';
-      return seconds;
-    },
-    /** Milliseconds e.g. 2000ms etc. */
-    get ms() {
-      const ms = new Date().getTime() - timeStart + 'ms';
-      return ms;
-    },
-  };
+  const ms = new Date().getTime() - timeStart + 'ms';
+  return ms;
 }
 
 // const res = isPrime(23);
