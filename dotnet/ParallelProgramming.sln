@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParallelProgramming.Core", "ParallelProgramming.Core\ParallelProgramming.Core.csproj", "{056AC238-F61B-4B24-BF88-B61F4244B824}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParallelProgramming.Cli", "ParallelProgramming.Cli\ParallelProgramming.Cli.csproj", "{1D1F93CC-B735-4676-9445-029876FCBD93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParallelProgramming.Gui", "ParallelProgramming.Gui\ParallelProgramming.Gui.csproj", "{C36EB0EA-F1C5-4DCB-BC17-791BF07245E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{056AC238-F61B-4B24-BF88-B61F4244B824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{056AC238-F61B-4B24-BF88-B61F4244B824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{056AC238-F61B-4B24-BF88-B61F4244B824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{056AC238-F61B-4B24-BF88-B61F4244B824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D1F93CC-B735-4676-9445-029876FCBD93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D1F93CC-B735-4676-9445-029876FCBD93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D1F93CC-B735-4676-9445-029876FCBD93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D1F93CC-B735-4676-9445-029876FCBD93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C36EB0EA-F1C5-4DCB-BC17-791BF07245E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C36EB0EA-F1C5-4DCB-BC17-791BF07245E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C36EB0EA-F1C5-4DCB-BC17-791BF07245E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C36EB0EA-F1C5-4DCB-BC17-791BF07245E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

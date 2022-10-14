@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="ParallelProgramming.Gui/App.axaml" value="ParallelProgramming.Gui/ParallelProgramming.Gui.csproj" />
+        <entry key="ParallelProgramming.Gui/Views/MainWindow.axaml" value="ParallelProgramming.Gui/ParallelProgramming.Gui.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

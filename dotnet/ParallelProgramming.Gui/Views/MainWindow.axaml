@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ParallelProgramming.Gui.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ParallelProgramming.Gui.Views.MainWindow"
+        Width="800"
+        Height="450"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="ParallelProgramming">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Margin="40">
+                <ListBox Height="300"
+                         MaxHeight="400"
+                         Width="140"
+                         Items="{Binding Primes}">
+                </ListBox>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="40">
+                <ComboBox Name="AlgorithmSelection"
+                          SelectedItem="{Binding SelectedAlgorithm, Mode=OneWayToSource}"
+                          HorizontalAlignment="Stretch"
+                          SelectedIndex="0">
+                    <ComboBoxItem>Sequential</ComboBoxItem>
+                    <ComboBoxItem>Parallel</ComboBoxItem>
+                </ComboBox>
+                <StackPanel Orientation="Horizontal" Margin="0, 10">
+                    <StackPanel Orientation="Vertical" Margin="0, 0,20,20">
+                        <Label>From</Label>
+                        <NumericUpDown Name="FromInputFieldSelection" Increment="10000"
+                                       Value="{Binding FromInputField, Mode=OneWayToSource}">
+                        </NumericUpDown>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="20,0,0,20">
+                        <Label>To</Label>
+                        <NumericUpDown Name="ToInputField" Increment="10000"
+                                       Value="{Binding ToInputField, Mode=OneWayToSource}">
+                        </NumericUpDown>
+                    </StackPanel>
+                </StackPanel>
+                <Button Name="CalculateButton"
+                        HorizontalAlignment="Stretch"
+                        Margin="10"
+                        Command="{Binding OnClick_CalculateButton }">
+                    Calculate
+                </Button>
+                <ProgressBar HorizontalAlignment="Center" Margin="20"></ProgressBar>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</Window>
