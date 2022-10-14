@@ -7,17 +7,17 @@ var st = new Stopwatch();
 st.Start();
 
 long from = 1;
-long to = 100000;
+long to = 10000000;
 
-var a= primes.GetPrimesSequential(from, to);
+var a = primes.GetPrimesSequential(from, to);
 Console.WriteLine($"Sequential time: {st.Elapsed.TotalSeconds}");
-// Console.WriteLine(a.Last());
+Console.WriteLine(a.Last());
 
 st.Restart();
 
 var b = primes.GetPrimesParallel(from, to);
 Console.WriteLine($"Parallel time: {st.Elapsed.TotalSeconds}");
-// Console.WriteLine(b.Last());
+Console.WriteLine(b.Last());
 
 st.Stop();
 

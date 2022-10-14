@@ -48,9 +48,13 @@ public class Primes
         if (num == 2) return true;
 
         var limit = Math.Ceiling(Math.Sqrt(num));
+        Console.WriteLine("        ");
+        Console.WriteLine("num: " + num);
+        Console.WriteLine("limit: " + limit);
+        Console.WriteLine("        ");
 
-        for (int i = 2; i <= limit; ++i)  
-            if (num % i == 0)  
+        for (int i = 2; i <= limit; ++i)
+            if (num % i == 0)
                 return false;
         return true;
     }

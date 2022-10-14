@@ -1,5 +1,7 @@
-function func() {
-  console.log('asd');
-}
+import { getPrimesSequential } from './core/logic';
 
-func();
+const first: number = 1;
+const last: number = 10_500_000;
+
+const primes = getPrimesSequential(first, last);
+console.log('primes: ', primes);
