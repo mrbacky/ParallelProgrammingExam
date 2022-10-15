@@ -1,6 +1,18 @@
-export function getPrimesSequential(first: number, last: number) {
+export function getPrimesSequential(first, last) {
   const t = timer();
-  const primes: number[] = [];
+  const primes = [];
+  for (let i = first; i < last; i++) {
+    if (isPrime(i)) {
+      primes.push(i);
+    }
+  }
+  console.log(`getPrimesSequential: ${t} ms first: ${first}, last: ${last}`);
+  return primes;
+}
+
+export async function getPrimesSequentialAsync(first, last) {
+  const t = timer();
+  const primes = [];
   for (let i = first; i < last; i++) {
     if (isPrime(i)) {
       primes.push(i);
@@ -10,19 +22,7 @@ export function getPrimesSequential(first: number, last: number) {
   return primes;
 }
 
-export async function getPrimesSequentialAsync(first: number, last: number) {
-  const t = timer();
-  const primes: number[] = [];
-  for (let i = first; i < last; i++) {
-    if (isPrime(i)) {
-      primes.push(i);
-    }
-  }
-  console.log(`time: ${t} first: ${first}, last: ${last}`);
-  return primes;
-}
-
-function isPrime(num: number): boolean {
+function isPrime(num) {
   if (num == 1) return false;
   if (num == 2) return true;
 

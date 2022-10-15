@@ -1,7 +1,8 @@
 {
   "name": "node",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,5 +11,9 @@
   },
   "author": "rado",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^4.18.2",
+    "node": "^18.11.0"
+  }
 }
