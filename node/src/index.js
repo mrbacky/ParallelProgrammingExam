@@ -1,14 +1,14 @@
 import { getPrimesSequential } from './core/logic.js';
-import { getPrimesSequentialAsync } from "./core/logic.js"
 import T, { Worker, isMainThread } from 'worker_threads';
 
 
 
-
+// process.env.UV_THREADPOOL_SIZE = 1;
 const first = 1;
 const last = 10_000_000;
 // const worker = new Worker('./src/core/worker.js');
-
+// const numOfThreads = process.env.UV_THREADPOOL_SIZE
+// console.log("numOfThreads: ", numOfThreads)
 const worker = new Worker('./src/core/worker.js');
 
 function func() {
@@ -28,7 +28,7 @@ function func() {
     }
 }
 
-func();
+// func();
 
 // const primes = getPrimesSequential(first, last);
 // console.log('primes: ', primes);
