@@ -1,5 +1,8 @@
+import { setTimeout } from 'timers/promises';
+import { parentPort, workerData, isMainThread } from 'worker_threads';
+import { getPrimesSequential } from './logic.js';
 
-import { parentPort } from "worker_threads";
+const promise = getPrimesSequential(workerData.first, workerData.last)
 
-const answer = 42;
-parentPort.postMessage(answer);
+parentPort.postMessage("promise: " + promise);
+

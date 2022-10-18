@@ -11,6 +11,29 @@ const last = 10_000_000;
 // console.log("numOfThreads: ", numOfThreads)
 const worker = new Worker('./src/core/worker.js');
 
+// if (isMainThread) {
+//     console.log('main');
+//     const worker1 = new Worker('./src/core/worker.js', { workerData: { test: "asd" } });
+//     const worker2 = new Worker('./src/core/worker.js');
+//     // const worker3 = new Worker('./src/core/worker.js');
+//     worker1.postMessage("test val 1");
+//     worker1.on('message', (data) => {
+//       console.log('data1 : ', data);
+//     });
+
+
+//     worker2.postMessage("test val 2");
+//     worker2.on('message', (data) => {
+//       console.log('data2 : ', data);
+//     });
+
+//   } else {
+
+
+//     console.log('Inside Worker!');
+//   }
+
+
 function func() {
     worker.on('message', (data) => {
         console.log('data : ', data);
