@@ -12,72 +12,51 @@ const workerPath = './src/core/worker.js';
  */
 export async function getPrimesSequential(first, last) {
   const primes = [];
-  console.time('getPrimesSequential');
-  console.log('----------------------------------');
-  console.log(`START interval: ${first} - ${last}`);
   for (let i = first; i <= last; i++) {
     if (isPrime(i)) {
       primes.push(i);
     }
   }
-  console.log(`END interval: ${first} - ${last}`);
-  console.log('----------------------------------');
-  console.timeEnd('getPrimesSequential');
   return primes;
 }
 
 /**
  * @param {array} intervals array of arrays of numbers [[1,5],[6,10],[11,15]]
  */
-export async function getPrimesConcurrent(intervals) {
-  const [res1, res2, res3] = await Promise.all([
-    getPrimesSequential(intervals[0].first, intervals[0].last),
-    getPrimesSequential(intervals[1].first, intervals[1].last),
-    getPrimesSequential(intervals[2].first, intervals[2].last),
-    getPrimesSequential(intervals[3].first, intervals[3].last),
-  ]);
-  const primes = [...res1, ...res2, ...res3];
-  return primes;
-}
-
-function getFullIntervalArray(first, last) {
-  const arr = [];
-  for (let i = first; i <= last; i++) {
-    arr.push(i);
+export async function getPrimesConcurrent(first, last) {
+  // hardcoded value for testing
+  const threadCount = os.cpus().length;
+  const subIntervals = getSubIntervals(first, last, threadCount)
+  const promises = [];
+  for (let index = 0; index < threadCount; index++) {
+    promises.push(getPrimesSequential(subIntervals[index].first, subIntervals[index].last))
   }
-  return arr;
+
+  const results = await Promise.all(promises);
+  const primes = results.flat();
+  return primes;
 }
 
 /**
  * @param {array} interval array of arrays of numbers [[1,5],[6,10],[11,15]]
  */
-export async function getPrimesParallel(intervals) {
-  // make intervals based on current thread count
-  // 4 threads
-  let primes = [];
-  // const threadCount = os.cpus().length;
-  const threadCount = 3; // NOTE: Hardcoded
+export async function getPrimesParallel(first, last) {
+  const threadCount = os.cpus().length;
 
   // get split of intervals
+  const subIntervals = getSubIntervals(first, last, threadCount);
 
-  // const numberOfChunks = get();
-  // const chunkSize = 0;
-
-  // const workerResult = await Promise.all()
   let workers = [];
 
   for (let i = 0; i < threadCount; i++) {
-    workers.push(initWorker(intervals[i].first, intervals[i].last));
+    workers.push(initWorker(subIntervals[i].first, subIntervals[i].last));
   }
   console.log('number of workers: ', workers.length);
   console.time('parallel time');
 
-  await Promise.all(workers).then((res) => {
-    primes = primes.concat(res);
-  });
+  const combinedResults = await Promise.all(workers);
+  const primes = combinedResults.flat()
   console.timeEnd('parallel time');
-  // const primesLen = primes.length;
-  // console.log("primes len: ", primesLen)
   return primes;
 }
 
@@ -110,145 +89,66 @@ export function getSubIntervals(first, last, threads) {
   let subIntervals = [];
 
   // number of items
-  const I_Count = last - first + 1;
-  console.log('I = ', I_Count);
+  const number_count = last - first + 1;
 
-  // Reminder - number of intervals with one extra item then the min size interval
-  const bigger_I_Count = I_Count % threads; // 1
-  console.log('bigger_I_Count = ', bigger_I_Count);
-  const normal_I_Count = threads - bigger_I_Count;
-  console.log('normal_I_Count = ', normal_I_Count);
+  // number of intervals with one extra item then the min size interval
+  const max_size_interval_count = number_count % threads;
+  const min_size_interval_count = threads - max_size_interval_count;
 
-  // min size of one interval
-  const base = I_Count - bigger_I_Count;
-  const min_I_size = base / threads; // 4
-  const max_I_size = min_I_size + 1; // 5
-  console.log('base = ', base);
-  console.log('min_I_size = ', min_I_size);
-  console.log('max_I_size = ', max_I_size);
+  const base = number_count - max_size_interval_count;
+  const min_I_size = base / threads;
+  const max_I_size = min_I_size + 1;
 
-  const start = first;
 
-  let counter = 0;
-  // console.log("f: ", first)
-  // console.log("l: ", last)
-  let nums = [start];
+  // looping through items, got solution from pattern of items that should be added
+  /**Example
+   * 5,  6,  7,  8
+   * 9, 10, 11, 12
+   * 13,14, 15, 16, 17   sub intervals of (5,17) for 3 threads should look like this
+   */
+
+  // finding pattern
+
+  // (5)  6  7  (8)  (9)  10  11  (12)  (13)  14  15  16  (17) 
+
+  // adding first number by default
+  let nums = [first];
+  // tracking how many assinments was completed for min and max interval size to decide
+  // interval skip change
   let min_I_assignment_counter = 0;
   let max_I_assignment_counter = 0;
+
   for (let item = first + 1; item <= last; item++) {
-    if (min_I_assignment_counter < normal_I_Count) {
-      console.log("FOR ITEM: ", item)
+    if (min_I_assignment_counter < min_size_interval_count) {
       const intervalSkip = min_I_size - 1;
       const last_cand = min_I_size - 2 + item;
       const next_first_cand = last_cand + 1;
-      console.log("last_cand", last_cand)
-      console.log("next_first_cand", next_first_cand)
-      console.log("intervalSkip: ", intervalSkip)
-      item = item + intervalSkip
-
-      nums.push(last_cand)
-      nums.push(next_first_cand)
+      item = item + intervalSkip;
+      nums.push(last_cand);
+      nums.push(next_first_cand);
       min_I_assignment_counter++;
-
-    } else if (max_I_assignment_counter < bigger_I_Count) {
-      console.log("----- bigger interval starting--------")
-      console.log("BIGGER INTERVAL FOR ITEM: ", item)
+    } else if (max_I_assignment_counter < max_size_interval_count) {
       const intervalSkip = max_I_size - 1;
       const last_cand = max_I_size - 2 + item;
       const next_first_cand = last_cand + 1;
-      console.log("last_cand", last_cand)
-      console.log("next_first_cand", next_first_cand)
-      console.log("intervalSkip: ", intervalSkip)
-      item = item + intervalSkip
-
-      nums.push(last_cand)
-      if (max_I_assignment_counter < bigger_I_Count - 1) {
-        nums.push(next_first_cand)
-
+      item = item + intervalSkip;
+      nums.push(last_cand);
+      // skipping last item. There is no first candidate, we are closing with last item
+      if (max_I_assignment_counter < max_size_interval_count - 1) {
+        nums.push(next_first_cand);
       }
       max_I_assignment_counter++;
-
     }
-
-    // item = min_I_size - 1 + item;
-    // counter++;
   }
 
-  console.log("nums: ", nums)
-
-
-
-
-  // for (let i = first; i <= last; i++) {
-  // for (let col = 0; col <= max_I_size; col++) {
-  //   console.log(`${i}  ${col}`)
-  // }
-
-  // if (counter <= bigger_I_Count) {
-  //   main;
-  //   // operations
-  // } else {
-  //   // operations
-  // }
-  // counter++;
-  // }
-
-  // const intervals = [
-  //   { first: 5, last: 9 },
-  //   { first: 10, last: 13 },
-  //   { first: 14, last: 17 },
-  //   { first: 18, last: 21 },
-  // ];
-
-  // if r = 1, going one down,  --- one array with extra
-
-  // if r =
+  // build array of intervals
+  for (let index = 0; index < nums.length; index++) {
+    const first = nums[index];
+    const last = nums[index + 1];
+    subIntervals.push({ first: first, last: last });
+    index++;
+  }
   return subIntervals;
 }
-
-
-// if (counter <= bigger_I_Count) {
-      //   main;
-      //   // operations
-      // } else {
-      //   // operations
-      // }
-      // if (row == 4) {
-      //   console.log("row == 4")
-      //   // break;
-      // }
-      // if (counter == 4) {
-      //   console.log("normal")
-      //   break;
-      // } else if (counter == 4) {
-      //   console.log("one extra")
-      //   break;
-
-      // }
-
-
-
-
-       // console.log("start of first col iter ---------------")
-    // for (let index = 0; index < array.; index++) {
-    //   const element = array[index];
-
-    // }
-
-    // for (let row = 0; row < threads; row++) {
-    //   for (let col = 0; col < max_I_size; col++) {
-    //     if (row == 0 || col == max_I_size) {
-    //       console.log(`row:${row} col: ${col} item: ${item}`);
-    //       item++;
-    //     }
-    //   }
-
-    //   // if (col == 0 || col == 3) {
-    //   //   nums.push(item)
-    //   // }
-    // }
-    // console.log("end of first col iter ---------------")
-    // console.log(`item outside: ${item}`);
-    // console.log("nums: ", nums)
 
 
