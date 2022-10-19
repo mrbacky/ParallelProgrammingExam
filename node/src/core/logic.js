@@ -1,7 +1,5 @@
-import cluster from 'cluster';
-import { Worker, isMainThread } from 'worker_threads';
+import { Worker } from 'worker_threads';
 import os from 'os';
-import { exists } from 'fs';
 
 const workerPath = './src/core/worker.js';
 
@@ -20,11 +18,7 @@ export async function getPrimesSequential(first, last) {
   return primes;
 }
 
-/**
- * @param {array} intervals array of arrays of numbers [[1,5],[6,10],[11,15]]
- */
 export async function getPrimesConcurrent(first, last) {
-  // hardcoded value for testing
   const threadCount = os.cpus().length;
   const subIntervals = getSubIntervals(first, last, threadCount)
   const promises = [];
@@ -37,9 +31,6 @@ export async function getPrimesConcurrent(first, last) {
   return primes;
 }
 
-/**
- * @param {array} interval array of arrays of numbers [[1,5],[6,10],[11,15]]
- */
 export async function getPrimesParallel(first, last) {
   const threadCount = os.cpus().length;
 
@@ -52,11 +43,9 @@ export async function getPrimesParallel(first, last) {
     workers.push(initWorker(subIntervals[i].first, subIntervals[i].last));
   }
   console.log('number of workers: ', workers.length);
-  console.time('parallel time');
 
   const combinedResults = await Promise.all(workers);
   const primes = combinedResults.flat()
-  console.timeEnd('parallel time');
   return primes;
 }
 
@@ -85,6 +74,7 @@ function isPrime(num) {
   return true;
 }
 
+
 export function getSubIntervals(first, last, threads) {
   let subIntervals = [];
 
@@ -99,7 +89,6 @@ export function getSubIntervals(first, last, threads) {
   const min_I_size = base / threads;
   const max_I_size = min_I_size + 1;
 
-
   // looping through items, got solution from pattern of items that should be added
   /**Example
    * 5,  6,  7,  8
@@ -107,8 +96,7 @@ export function getSubIntervals(first, last, threads) {
    * 13,14, 15, 16, 17   sub intervals of (5,17) for 3 threads should look like this
    */
 
-  // finding pattern
-
+  // taking a look into pattern
   // (5)  6  7  (8)  (9)  10  11  (12)  (13)  14  15  16  (17) 
 
   // adding first number by default
@@ -120,22 +108,22 @@ export function getSubIntervals(first, last, threads) {
 
   for (let item = first + 1; item <= last; item++) {
     if (min_I_assignment_counter < min_size_interval_count) {
-      const intervalSkip = min_I_size - 1;
-      const last_cand = min_I_size - 2 + item;
-      const next_first_cand = last_cand + 1;
-      item = item + intervalSkip;
-      nums.push(last_cand);
-      nums.push(next_first_cand);
+      const interval_gap_size = min_I_size - 1;
+      const sub_interval_last = min_I_size - 2 + item;
+      const next_sub_interval_first = sub_interval_last + 1;
+      item = item + interval_gap_size;
+      nums.push(sub_interval_last);
+      nums.push(next_sub_interval_first);
       min_I_assignment_counter++;
     } else if (max_I_assignment_counter < max_size_interval_count) {
-      const intervalSkip = max_I_size - 1;
-      const last_cand = max_I_size - 2 + item;
-      const next_first_cand = last_cand + 1;
-      item = item + intervalSkip;
-      nums.push(last_cand);
-      // skipping last item. There is no first candidate, we are closing with last item
+      const interval_gap_size = max_I_size - 1;
+      const sub_interval_last = max_I_size - 2 + item;
+      const next_sub_interval_first = sub_interval_last + 1;
+      item = item + interval_gap_size;
+      nums.push(sub_interval_last);
+      // skipping last item, there is no first item, we are closing with last item
       if (max_I_assignment_counter < max_size_interval_count - 1) {
-        nums.push(next_first_cand);
+        nums.push(next_sub_interval_first);
       }
       max_I_assignment_counter++;
     }

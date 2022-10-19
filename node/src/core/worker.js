@@ -1,4 +1,3 @@
-import { setTimeout } from 'timers/promises';
 import { parentPort, workerData } from 'worker_threads';
 import { getPrimesSequential } from './logic.js';
 
