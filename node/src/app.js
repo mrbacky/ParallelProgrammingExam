@@ -6,7 +6,7 @@ import {
   getPrimesParallel,
 } from './core/logic.js';
 
-const main_first = 1_000_000;
+const main_first = 1;
 const main_last = 2_000_000;
 
 const server = express();
