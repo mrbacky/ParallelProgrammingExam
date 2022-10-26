@@ -6,8 +6,8 @@ import {
   getPrimesParallel,
 } from './core/logic.js';
 
-const main_first = 1;
-const main_last = 2_000_000;
+const main_first = 5;
+const main_last = 100000000;
 
 const server = express();
 const calls = [];
@@ -73,7 +73,7 @@ server.get('/primesPar', async (req, res) => {
   console.time('parallel');
   const primes = await getPrimesParallel(main_first, main_last);
   console.timeEnd('parallel');
-
+  console.log("primes results: ", primes)
   const first_prime = primes[0];
   const last_prime = primes[primes.length - 1];
 

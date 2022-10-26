@@ -32,9 +32,10 @@ export async function getPrimesConcurrent(first, last) {
 }
 
 export async function getPrimesParallel(first, last) {
-  const threadCount = os.cpus().length;
+  // const threadCount = os.cpus().length;
+  const threadCount = 4;
 
-  // get split of intervals
+
   const subIntervals = getSubIntervals(first, last, threadCount);
 
   let workers = [];
@@ -58,7 +59,7 @@ async function initWorker(first, last) {
     worker.on('error', reject);
     worker.on('exit', () => resolve(primes));
     worker.on('message', (msg) => {
-      primes = primes.concat(msg);
+      primes = msg;
     });
   });
 }
@@ -85,8 +86,9 @@ export function getSubIntervals(first, last, threads) {
   const max_size_interval_count = number_count % threads;
   const min_size_interval_count = threads - max_size_interval_count;
 
-  const base = number_count - max_size_interval_count;
-  const min_I_size = base / threads;
+  // number of items in x * x cube
+  const base_cube_items_count = number_count - max_size_interval_count;
+  const min_I_size = base_cube_items_count / threads;
   const max_I_size = min_I_size + 1;
 
   // looping through items, got solution from pattern of items that should be added
@@ -108,10 +110,10 @@ export function getSubIntervals(first, last, threads) {
 
   for (let item = first + 1; item <= last; item++) {
     if (min_I_assignment_counter < min_size_interval_count) {
-      const interval_gap_size = min_I_size - 1;
+      const interval_skip_size = min_I_size - 1;
       const sub_interval_last = min_I_size - 2 + item;
       const next_sub_interval_first = sub_interval_last + 1;
-      item = item + interval_gap_size;
+      item = item + interval_skip_size;
       nums.push(sub_interval_last);
       nums.push(next_sub_interval_first);
       min_I_assignment_counter++;
