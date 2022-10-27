@@ -7,7 +7,7 @@ import {
 } from './core/logic.js';
 
 const main_first = 5;
-const main_last = 100000000;
+const main_last = 22;
 
 const server = express();
 const calls = [];

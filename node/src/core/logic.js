@@ -88,7 +88,9 @@ export function getSubIntervals(first, last, threads) {
 
   // number of items in x * x cube
   const base_cube_items_count = number_count - max_size_interval_count;
+  // number of items in minimum interval size
   const min_I_size = base_cube_items_count / threads;
+  // number of items in maximum interval size
   const max_I_size = min_I_size + 1;
 
   // looping through items, got solution from pattern of items that should be added
